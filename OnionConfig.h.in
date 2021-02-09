@@ -1,0 +1,2 @@
+#define Onion_VERSION_MAJOR @Onion_VERSION_MAJOR@
+#define Onion_VERSION_MINOR @Onion_VERSION_MINOR@
