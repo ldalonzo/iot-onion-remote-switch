@@ -1,0 +1,1 @@
+add_library(omega_device_methods omega_device_methods.cpp)
