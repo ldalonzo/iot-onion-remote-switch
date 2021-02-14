@@ -3,7 +3,9 @@
 
 #include "OnionConfig.h"
 
+#include "iothub_device_client.h"
 #include "iothub.h"
+#include "iothubtransportmqtt.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,5 +17,9 @@ int main(int argc, char *argv[])
     return -1;
   }
 
+  IOTHUB_CLIENT_TRANSPORT_PROVIDER protocol = MQTT_Protocol;
+  IOTHUB_DEVICE_CLIENT_HANDLE iotHubClientHandle;
+
+  IoTHub_Deinit();
   return 0;
 }

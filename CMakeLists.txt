@@ -30,6 +30,7 @@ target_include_directories(onion-switch PUBLIC
 )
 
 target_link_libraries(onion-switch
+  iothub_client_mqtt_transport
   iothub_client
 )
 
