@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     return -2;
   }
 
+  IoTHubDeviceClient_Destroy(iotHubClientHandle);
   IoTHub_Deinit();
   return 0;
 }

@@ -16,6 +16,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/azure-iot-sdk-c)
 set(AZUREIOT_INC_FOLDER "${PROJECT_SOURCE_DIR}/submodules/azure-iot-sdk-c/iothub_client/inc")
 include_directories(${AZUREIOT_INC_FOLDER})
 
+configure_file(appsettings.json appsettings.json COPYONLY)
+
 # configure a header file to pass some of the CMake settings
 # to the source code
 configure_file(OnionConfig.h.in OnionConfig.h)
