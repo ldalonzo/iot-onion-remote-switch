@@ -1,0 +1,70 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+env:
+  BUILD_TYPE: Release
+  TOOLCHAIN_PREFIX: /usr/local
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: cURL - Download source
+      run: |
+        wget http://curl.haxx.se/download/curl-7.60.0.tar.gz
+        tar -xvf curl-7.60.0.tar.gz
+
+    - name: cURL - Build
+      shell: bash
+      working-directory: ${{github.workspace}}/curl-7.60.0
+      run: |
+        ./configure --with-sysroot=${TOOLCHAIN_SYSROOT} --prefix=${TOOLCHAIN_PREFIX} --target=${TOOLCHAIN_NAME} --with-ssl --with-zlib --host=${TOOLCHAIN_NAME} --build=x86_64-pc-linux-uclibc
+        make
+        sudo make install
+
+    - name: libuuid - Download source
+      run: |
+        wget https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.32/util-linux-2.32-rc2.tar.gz
+        tar -xvf util-linux-2.32-rc2.tar.gz
+
+    - name: libuuid - Build
+      shell: bash
+      working-directory: ${{github.workspace}}/util-linux-2.32-rc2
+      run: |
+        ./configure --prefix=${TOOLCHAIN_PREFIX} --with-sysroot=${TOOLCHAIN_SYSROOT} --target=${TOOLCHAIN_NAME} --host=${TOOLCHAIN_NAME} --disable-all-programs  --disable-bash-completion --enable-libuuid
+        make
+        sudo make install
+
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Build Azure IoT SDK for C
+      shell: bash
+      working-directory: ${{github.workspace}}/submodules/azure-iot-sdk-c
+      run: |
+        mkdir cmake
+        cd cmake
+        cmake ..
+        make
+        sudo make install
+
+    - name: Build
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: |
+        cmake -E make_directory ${{github.workspace}}/cmake
+        cmake -DPACKAGE_TESTS:STRING=ON -DCMAKE_BUILD_TYPE:STRING=$BUILD_TYPE -S${{github.workspace}} -B${{github.workspace}}/cmake
+        cmake --build ${{github.workspace}}/cmake --config $BUILD_TYPE
+
+    - name: Test
+      working-directory: ${{github.workspace}}/cmake
+      shell: bash
+      run: ctest -j10 -C $BUILD_TYPE -T test

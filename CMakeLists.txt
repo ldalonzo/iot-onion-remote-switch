@@ -12,9 +12,10 @@ include_directories(
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/submodules/azure-iot-sdk-c)
-set(AZUREIOT_INC_FOLDER "${PROJECT_SOURCE_DIR}/submodules/azure-iot-sdk-c/iothub_client/inc")
-include_directories(${AZUREIOT_INC_FOLDER})
+# Set up the include and library paths
+include_directories($ENV{TOOLCHAIN_PREFIX}/include/)
+include_directories($ENV{TOOLCHAIN_PREFIX}/include/azureiot)
+link_directories($ENV{TOOLCHAIN_PREFIX}/lib)
 
 configure_file(appsettings.json appsettings.json COPYONLY)
 
@@ -37,13 +38,21 @@ target_link_libraries(onion-switch
 
   iothub_client_mqtt_transport
   iothub_client
+  umqtt
+  aziotsharedutil
+  parson
+  pthread
+  curl
+  ssl
+  crypto
+  m 
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
-option(PACKAGE_TESTS "Build the tests" ON)
+option(PACKAGE_TESTS "Build the tests")
 
 if(PACKAGE_TESTS)
   include(CTest)

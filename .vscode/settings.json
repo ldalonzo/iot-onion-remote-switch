@@ -1,0 +1,9 @@
+{
+  "cmake.buildDirectory": "${workspaceFolder}/cmake",
+  "cmake.configureSettings": {
+    "PACKAGE_TESTS": "ON"
+  },
+  "cmake.environment": {
+    "TOOLCHAIN_PREFIX": "/usr/local"
+  }
+}
