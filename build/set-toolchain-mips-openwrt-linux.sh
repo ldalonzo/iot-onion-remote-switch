@@ -1,0 +1,14 @@
+export TOOLCHAIN_SYSROOT=${TOOLCHAIN_ROOT}/toolchain-mips_34kc_gcc-4.8-linaro_uClibc-0.9.33.2
+export TOOLCHAIN_EXES=${TOOLCHAIN_SYSROOT}/bin
+export TOOLCHAIN_NAME=mips-openwrt-linux
+export AR=${TOOLCHAIN_EXES}/${TOOLCHAIN_NAME}-ar
+export AS=${TOOLCHAIN_EXES}/${TOOLCHAIN_NAME}-as
+export CC=${TOOLCHAIN_EXES}/${TOOLCHAIN_NAME}-gcc
+export LD=${TOOLCHAIN_EXES}/${TOOLCHAIN_NAME}-ld
+export NM=${TOOLCHAIN_EXES}/${TOOLCHAIN_NAME}-nm
+export RANLIB=${TOOLCHAIN_EXES}/${TOOLCHAIN_NAME}-ranlib
+
+export LDFLAGS="-L${TOOLCHAIN_SYSROOT}/usr/lib"
+export LIBS="-lssl -lcrypto -ldl -lpthread"
+export TOOLCHAIN_PREFIX=${TOOLCHAIN_SYSROOT}/usr
+export STAGING_DIR=${TOOLCHAIN_SYSROOT}
