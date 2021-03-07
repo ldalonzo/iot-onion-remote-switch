@@ -35,6 +35,7 @@ target_include_directories(onion-switch PUBLIC
 
 target_link_libraries(onion-switch
   omega_config
+  omega_device_methods
 
   iothub_client_mqtt_transport
   iothub_client

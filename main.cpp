@@ -4,7 +4,9 @@
 #include "OnionConfig.h"
 
 #include "omega_config.h"
+#include "omega_device_methods.h"
 
+#include "iothub_client_options.h"
 #include "iothub_device_client.h"
 #include "iothub.h"
 #include "iothubtransportmqtt.h"
@@ -27,6 +29,16 @@ int main(int argc, char *argv[])
     std::cout << "ERROR: iotHubClientHandle is NULL!" << std::endl;
     return -2;
   }
+
+  // Turn on automatic URL encoding
+  bool urlEncodeOn = true;
+  IoTHubDeviceClient_SetOption(iotHubClientHandle, OPTION_AUTO_URL_ENCODE_DECODE, &urlEncodeOn);
+
+  bool traceOn = true;
+  IoTHubDeviceClient_SetOption(iotHubClientHandle, OPTION_LOG_TRACE, &traceOn);
+
+  IoTHubDeviceClient_SetDeviceMethodCallback(iotHubClientHandle, deviceMethodCallback, NULL);
+  getchar();
 
   IoTHubDeviceClient_Destroy(iotHubClientHandle);
   IoTHub_Deinit();

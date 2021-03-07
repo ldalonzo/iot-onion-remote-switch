@@ -9,8 +9,24 @@ namespace
   TEST(deviceMethodCallback, Unrecognized)
   {
     const char *method_name = "blah";
-    int actual_result = deviceMethodCallback(method_name);
+    const unsigned char *payload = new unsigned char;
+    size_t size;
+    unsigned char **response = new unsigned char *;
+    size_t *response_size = new size_t;
+    int actual_result = deviceMethodCallback(method_name, payload, size, response, response_size, NULL);
 
     EXPECT_EQ(-1, actual_result);
+  }
+
+  TEST(deviceMethodCallback, TurnON)
+  {
+    const char *method_name = "turnON";
+    const unsigned char *payload = new unsigned char;
+    size_t size;
+    unsigned char **response = new unsigned char *;
+    size_t *response_size = new size_t;
+    int actual_result = deviceMethodCallback(method_name, payload, size, response, response_size, NULL);
+
+    EXPECT_EQ(200, actual_result);
   }
 } // namespace
