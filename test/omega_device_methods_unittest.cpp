@@ -26,7 +26,9 @@ namespace
     unsigned char **response = new unsigned char *;
     size_t *response_size = new size_t;
     int actual_result = deviceMethodCallback(method_name, payload, size, response, response_size, NULL);
+    std::string actual_response(reinterpret_cast<char const *>(*response), *response_size);
 
     EXPECT_EQ(200, actual_result);
+    EXPECT_EQ("{ }", actual_response);
   }
 } // namespace
