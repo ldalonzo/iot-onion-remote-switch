@@ -11,6 +11,13 @@
 #include "iothub.h"
 #include "iothubtransportmqtt.h"
 
+static Command *command;
+
+static int deviceMethodCallback(const char *method_name, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
+{
+  return command->Execute(std::string(method_name), payload, size, response, response_size);
+}
+
 int main(int argc, char *argv[])
 {
   std::cout << argv[0] << " Version " << Onion_VERSION_MAJOR << "." << Onion_VERSION_MINOR << std::endl;
@@ -30,6 +37,8 @@ int main(int argc, char *argv[])
     return -2;
   }
 
+  command = new OmegaDeviceMethodCommand();
+
   // Turn on automatic URL encoding
   bool urlEncodeOn = true;
   IoTHubDeviceClient_SetOption(iotHubClientHandle, OPTION_AUTO_URL_ENCODE_DECODE, &urlEncodeOn);
@@ -42,5 +51,7 @@ int main(int argc, char *argv[])
 
   IoTHubDeviceClient_Destroy(iotHubClientHandle);
   IoTHub_Deinit();
+
+  delete command;
   return 0;
 }
