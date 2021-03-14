@@ -1,3 +1,5 @@
+//#define _IN_MEMORY_GPIO_
+
 #include <iostream>
 #include <string>
 
@@ -11,11 +13,14 @@
 #include "iothub.h"
 #include "iothubtransportmqtt.h"
 
-static Command *command;
+#include <fastgpio.h>
+#include <fastgpioomega.h>
+
+static IoTHubDeviceClientDeviceMethodCallbackAdapter *directMethodHandler_;
 
 static int deviceMethodCallback(const char *method_name, const unsigned char *payload, size_t size, unsigned char **response, size_t *response_size, void *userContextCallback)
 {
-  return command->Execute(std::string(method_name), payload, size, response, response_size);
+  return directMethodHandler_->Execute(method_name, payload, size, response, response_size, userContextCallback);
 }
 
 int main(int argc, char *argv[])
@@ -37,7 +42,15 @@ int main(int argc, char *argv[])
     return -2;
   }
 
-  command = new OmegaDeviceMethodCommand();
+  FastGpio *gpio;
+#ifdef _IN_MEMORY_GPIO_
+  gpio = new InMemoryFastGpio();
+#else
+  gpio = new FastGpioOmega();
+#endif
+
+  Command *cmd = new OmegaDeviceMethodCommand(gpio);
+  directMethodHandler_ = new IoTHubDeviceClientDeviceMethodCallbackAdapter(cmd);
 
   // Turn on automatic URL encoding
   bool urlEncodeOn = true;
@@ -52,6 +65,9 @@ int main(int argc, char *argv[])
   IoTHubDeviceClient_Destroy(iotHubClientHandle);
   IoTHub_Deinit();
 
-  delete command;
+  delete directMethodHandler_;
+  delete cmd;
+  delete gpio;
+
   return 0;
 }

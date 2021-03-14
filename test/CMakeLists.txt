@@ -13,6 +13,7 @@ target_link_libraries(onion_test
   gtest_main
   omega_config
   omega_device_methods
+  omega_fastgpio
 )
 
 gtest_discover_tests(onion_test)

@@ -9,6 +9,15 @@ include_directories(
   ${PROJECT_SOURCE_DIR}/submodules/azure-iot-sdk-c/deps/parson/
 )
 
+include_directories(
+  ${PROJECT_SOURCE_DIR}/submodules/fast-gpio/include/
+)
+
+add_library(omega_fastgpio
+  ${PROJECT_SOURCE_DIR}/submodules/fast-gpio/src/fastgpioomega.cpp
+  ${PROJECT_SOURCE_DIR}/submodules/fast-gpio/src/module.cpp
+)
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
@@ -36,6 +45,7 @@ target_include_directories(onion-switch PUBLIC
 target_link_libraries(onion-switch
   omega_config
   omega_device_methods
+  omega_fastgpio
 
   iothub_client_mqtt_transport
   iothub_client

@@ -4,3 +4,6 @@
 [submodule "submodules/azure-iot-sdk-c"]
 	path = submodules/azure-iot-sdk-c
 	url = https://github.com/Azure/azure-iot-sdk-c.git
+[submodule "submodules/fast-gpio"]
+	path = submodules/fast-gpio
+	url = https://github.com/OnionIoT/fast-gpio.git
